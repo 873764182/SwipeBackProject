@@ -2,6 +2,7 @@ package pixel.android.swipeback;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -66,7 +67,7 @@ public class PixelSwipeBackView extends HorizontalScrollView {
         windowManager.getDefaultDisplay().getSize(point);
         this.screenX = point.x;
         this.screenY = point.y;
-        this.rightViewWidth = (int) (this.screenX * (2d / 3d));
+        this.rightViewWidth = this.screenX / 2;
         // 设置内容View的宽高
         ViewGroup.LayoutParams mViewLayoutParams = new ViewGroup.LayoutParams(screenX, screenY);
         this.mView.setLayoutParams(mViewLayoutParams);
@@ -84,6 +85,7 @@ public class PixelSwipeBackView extends HorizontalScrollView {
         this.rightFillView = new View(mActivity);
         ViewGroup.LayoutParams rightFillViewLayoutParams = new ViewGroup.LayoutParams(this.rightViewWidth, screenY); // 设置填充View的宽高为屏幕的宽高
         this.rightFillView.setLayoutParams(rightFillViewLayoutParams);
+//        this.rightFillView.setBackgroundColor(Color.argb(200, 221, 221, 221));
         // 将View填入容器注意顺序
         this.rootView.addView(leftFillView, 0);
         this.rootView.addView(mView, 1);
@@ -162,6 +164,7 @@ public class PixelSwipeBackView extends HorizontalScrollView {
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
+                smoothScrollTo(screenX / 2, 0);
                 if (upPixelSwipeBackView != null) {
                     upPixelSwipeBackView.smoothScrollTo(screenX, 0);
                 }
