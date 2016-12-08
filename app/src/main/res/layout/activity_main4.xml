@@ -7,11 +7,13 @@
     android:background="#D8BFD8"
     tools:context="pixel.android.main.Main4Activity">
 
-    <Button
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
+        android:gravity="center"
         android:padding="10dp"
-        android:text="这是第四个页面" />
+        android:text="这是第四个页面"
+        android:textColor="@color/colorPrimary" />
 </RelativeLayout>
