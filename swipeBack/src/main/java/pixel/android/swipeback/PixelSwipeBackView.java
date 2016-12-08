@@ -20,7 +20,7 @@ import java.util.List;
  * <p>
  * 滑动返回控件
  * 使用方式:
- * 1. 将setContentView改为setContentView(new PixelSwipeBackView(this, R.layout.activity_main2));
+ * 1. 将setContentView(R.layout.activity_main)改为setContentView(new PixelSwipeBackView(this, R.layout.activity_main));
  * 2. 设置Activity背景透明@android:style/Theme.Translucent.NoTitleBar
  */
 
