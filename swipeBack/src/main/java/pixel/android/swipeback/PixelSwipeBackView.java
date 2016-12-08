@@ -97,9 +97,8 @@ public class PixelSwipeBackView extends HorizontalScrollView {
             @Override
             public void run() {
                 smoothScrollTo(screenX, 0);
-                if (upPixelSwipeBackView != null) {
+                if (upPixelSwipeBackView != null)
                     upPixelSwipeBackView.smoothScrollTo(screenX + rightViewWidth, 0);
-                }
             }
         }, 10);
         // 加入引用
@@ -128,6 +127,8 @@ public class PixelSwipeBackView extends HorizontalScrollView {
                         upPixelSwipeBackView.smoothScrollTo(screenX, 0);
                 } else {
                     smoothScrollTo(screenX, 0);
+                    if (upPixelSwipeBackView != null)
+                        upPixelSwipeBackView.smoothScrollTo(screenX + rightViewWidth, 0);
                 }
                 downX = 0f;
                 return true;    // 消除HorizontalScrollView漂移
