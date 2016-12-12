@@ -149,7 +149,7 @@ public class PixelSwipeBackView extends HorizontalScrollView {
             // 移除引用
             PixelSwipeBackView.SWIPE_BACK_STACK.remove(this);
             // 关闭Activity
-            this.mActivity.finish();
+            if (this.mActivity != null) this.mActivity.finish();
             return;
         }
         if (upPixelSwipeBackView != null) {
