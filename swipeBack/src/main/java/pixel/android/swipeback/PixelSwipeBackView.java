@@ -50,13 +50,17 @@ public class PixelSwipeBackView extends HorizontalScrollView {
     private float downX;
     /*滑动距离*/
     private float moveX;
-    // 是否已经滑动关闭
+    // 是否已经滑动关闭 2131230862 16973840
     private boolean isClose = false;
 
     public PixelSwipeBackView(Activity activity, int layoutResID) {
         super(activity);
         // 赋值参数
         this.mActivity = activity;
+        // 设置主题两种方式都无效
+//        this.mActivity.setTheme(android.R.style.Theme_Translucent_NoTitleBar);
+//        this.mActivity.getTheme().applyStyle(android.R.style.Theme_Translucent_NoTitleBar, true);
+        // 加载视图
         LayoutInflater mInflater = (LayoutInflater) mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.mView = mInflater.inflate(layoutResID, null);
         // 去掉滚动条
@@ -80,12 +84,12 @@ public class PixelSwipeBackView extends HorizontalScrollView {
         this.leftFillView = new View(mActivity);
         ViewGroup.LayoutParams leftFillViewLayoutParams = new ViewGroup.LayoutParams(screenX, screenY); // 设置填充View的宽高为屏幕的宽高
         this.leftFillView.setLayoutParams(leftFillViewLayoutParams);
-//        this.leftFillView.setBackgroundResource();    // TODO 可以设置一张右边带有阴影的背景图使界面更有层次感
+        this.leftFillView.setBackgroundColor(Color.argb(0, 0, 0, 0));    // TODO 可以设置一张右边带有阴影的背景图使界面更有层次感
         // 建立一个背景透明的右边填充View
         this.rightFillView = new View(mActivity);
         ViewGroup.LayoutParams rightFillViewLayoutParams = new ViewGroup.LayoutParams(this.rightViewWidth, screenY); // 设置填充View的宽高为屏幕的宽高
         this.rightFillView.setLayoutParams(rightFillViewLayoutParams);
-//        this.rightFillView.setBackgroundColor(Color.argb(200, 221, 221, 221));
+        this.rightFillView.setBackgroundColor(Color.argb(0, 0, 0, 0));
         // 将View填入容器注意顺序
         this.rootView.addView(leftFillView, 0);
         this.rootView.addView(mView, 1);
@@ -157,19 +161,31 @@ public class PixelSwipeBackView extends HorizontalScrollView {
     @Override
     protected void onDetachedFromWindow() { // 处理用户是按返回键关闭界面的事件
         super.onDetachedFromWindow();
-        if (isClose) return;
+        if (!isClose) {
+            finishActivity();
+        }
+    }
+
+    /**
+     * 关闭Activity
+     * 建议监听返回键调用该方法关闭activity
+     * 直接关闭activity UI会有一定的闪屏发生,主要是动画切换问题.通过这个方法关闭就可以避免
+     * <p>
+     * 切勿重写activity的finish方法
+     * 因为finishActivity关闭activity还是通过activity的finish方法实现的
+     */
+    public void finishActivity() {
         // 移除引用
         PixelSwipeBackView.SWIPE_BACK_STACK.remove(this);
         // 将上一个页面滚动到正确位置
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                smoothScrollTo(screenX / 2, 0);
                 if (upPixelSwipeBackView != null) {
                     upPixelSwipeBackView.smoothScrollTo(screenX, 0);
                 }
+                smoothScrollTo(0, 0);
             }
         }, 10);
     }
-
 }
