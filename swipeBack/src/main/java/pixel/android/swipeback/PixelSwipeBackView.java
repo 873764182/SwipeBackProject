@@ -22,7 +22,12 @@ import java.util.List;
  * 滑动返回控件
  * 使用方式:
  * 1. 将setContentView(R.layout.activity_main)改为setContentView(new PixelSwipeBackView(this, R.layout.activity_main));
- * 2. 设置Activity背景透明@android:style/Theme.Translucent.NoTitleBar
+ * 2. 设置Activity背景透明
+ * android:theme="@android:style/Theme.Translucent.NoTitleBar"
+ * <p>
+ * // 代码设置主题两种方式都无效 只能在清单文件中设置
+ * this.mActivity.setTheme(android.R.style.Theme_Translucent_NoTitleBar);
+ * this.mActivity.getTheme().applyStyle(android.R.style.Theme_Translucent_NoTitleBar, true);
  */
 
 public class PixelSwipeBackView extends HorizontalScrollView {
@@ -57,9 +62,6 @@ public class PixelSwipeBackView extends HorizontalScrollView {
         super(activity);
         // 赋值参数
         this.mActivity = activity;
-        // 设置主题两种方式都无效
-//        this.mActivity.setTheme(android.R.style.Theme_Translucent_NoTitleBar);
-//        this.mActivity.getTheme().applyStyle(android.R.style.Theme_Translucent_NoTitleBar, true);
         // 加载视图
         LayoutInflater mInflater = (LayoutInflater) mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.mView = mInflater.inflate(layoutResID, null);
