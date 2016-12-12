@@ -4,7 +4,6 @@
     android:id="@+id/activity_main4"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#D8BFD8"
     tools:context="pixel.android.main.Main4Activity">
 
     <TextView

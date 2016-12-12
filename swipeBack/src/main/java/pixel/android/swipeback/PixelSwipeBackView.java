@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -58,6 +60,10 @@ public class PixelSwipeBackView extends HorizontalScrollView {
     // 是否已经滑动关闭 2131230862 16973840
     private boolean isClose = false;
 
+    public Drawable getBackgroundDrawable() {
+        return new ColorDrawable(Color.argb(255, 255, 255, 255));
+    }
+
     public PixelSwipeBackView(Activity activity, int layoutResID) {
         super(activity);
         // 赋值参数
@@ -77,6 +83,9 @@ public class PixelSwipeBackView extends HorizontalScrollView {
         // 设置内容View的宽高
         ViewGroup.LayoutParams mViewLayoutParams = new ViewGroup.LayoutParams(screenX, screenY);
         this.mView.setLayoutParams(mViewLayoutParams);
+        if (this.mView.getBackground() == null) {
+            this.mView.setBackground(getBackgroundDrawable());
+        }
         // 建立容器设置容器的宽高
         this.rootView = new LinearLayout(mActivity);
         this.rootView.setOrientation(LinearLayout.HORIZONTAL);
