@@ -37,6 +37,7 @@ public class SwipeBackView extends FrameLayout {
         return null;
     }
 
+    protected static final float PROPORTION = 2f;
     protected Activity activity;
     protected View contentView;
     protected View prevView;
@@ -44,10 +45,10 @@ public class SwipeBackView extends FrameLayout {
     protected float rawX;
     protected int moveX;
     protected int contentX;
+    protected boolean ON = true;
 
     protected LayoutParams contentLayoutParams;
     protected LayoutParams prevLayoutParams;
-    protected static final float PROPORTION = 2f;
 
     public SwipeBackView(Activity activity, int resId) {
         super(activity);
@@ -63,6 +64,10 @@ public class SwipeBackView extends FrameLayout {
         this.contentView = contentView;
 
         this.init();
+    }
+
+    public void setOpen(boolean ON) {
+        this.ON = ON;
     }
 
     protected LayoutParams getMatchLayoutParams() {
@@ -97,6 +102,9 @@ public class SwipeBackView extends FrameLayout {
         contentView.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+                if (!ON) {
+                    return false;
+                }
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         rawX = event.getRawX();
