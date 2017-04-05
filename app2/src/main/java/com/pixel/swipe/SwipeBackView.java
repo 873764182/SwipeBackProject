@@ -38,6 +38,7 @@ public class SwipeBackView extends FrameLayout {
     }
 
     protected static final float PROPORTION = 2f;
+    protected int DEF_BG_COLOR = Color.argb(250, 255, 255, 255);
     protected Activity activity;
     protected View contentView;
     protected View prevView;
@@ -66,10 +67,6 @@ public class SwipeBackView extends FrameLayout {
         this.init();
     }
 
-    public void setOpen(boolean ON) {
-        this.ON = ON;
-    }
-
     protected LayoutParams getMatchLayoutParams() {
         LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         layoutParams.leftMargin = 0;
@@ -87,7 +84,7 @@ public class SwipeBackView extends FrameLayout {
         prevBitmap = getLastBitmap();
         if (prevBitmap == null) {
             prevView = new View(activity);
-            prevView.setBackground(new ColorDrawable(Color.rgb(0, 0, 0)));
+            prevView.setBackground(new ColorDrawable(DEF_BG_COLOR));
         } else {
             prevView = new ImageView(activity);
             ((ImageView) prevView).setScaleType(ImageView.ScaleType.FIT_XY);
@@ -98,6 +95,7 @@ public class SwipeBackView extends FrameLayout {
 
         contentLayoutParams = getMatchLayoutParams();
         contentView.setLayoutParams(contentLayoutParams);
+        contentView.setBackgroundColor(DEF_BG_COLOR);
 
         contentView.setOnTouchListener(new OnTouchListener() {
             @Override
@@ -170,6 +168,14 @@ public class SwipeBackView extends FrameLayout {
         super.onDetachedFromWindow();
 
         BITMAP_ARRAY.remove(activity.getClass().getName());
+    }
+
+    public void setOpen(boolean ON) {
+        this.ON = ON;
+    }
+
+    public void setDefBgColor(int defBgColor) {
+        DEF_BG_COLOR = defBgColor;
     }
 
 }
