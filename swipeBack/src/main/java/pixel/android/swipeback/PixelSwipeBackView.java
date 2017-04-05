@@ -117,7 +117,7 @@ public class PixelSwipeBackView extends HorizontalScrollView {
                 if (upPixelSwipeBackView != null)
                     upPixelSwipeBackView.smoothScrollTo(screenX + rightViewWidth, 0);
             }
-        }, 10);
+        }, 100);
         // 加入引用
         PixelSwipeBackView.SWIPE_BACK_STACK.add(this);
     }
