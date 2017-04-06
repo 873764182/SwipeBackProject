@@ -2,6 +2,7 @@ package com.pixel.swipe;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -30,7 +31,7 @@ public class SwipeBackView extends FrameLayout {
     protected int DEF_BG_COLOR = Color.argb(250, 255, 255, 255);    // 默认背景色
     protected Activity activity;
     protected View contentView;
-    protected View prevView;
+    protected ImageView prevView;
     protected Bitmap prevBitmap;
     protected float rawX;
     protected int moveX;
@@ -40,11 +41,25 @@ public class SwipeBackView extends FrameLayout {
     protected LayoutParams contentLayoutParams;
     protected LayoutParams prevLayoutParams;
 
+    protected class ILayout extends FrameLayout {
+
+        public ILayout(Context context) {
+            super(context);
+        }
+
+        @Override
+        public boolean onInterceptTouchEvent(MotionEvent ev) {
+            if (ON && ev.getRawX() <= TRIGGER) {
+                return true;
+            }
+            return super.onInterceptTouchEvent(ev);
+        }
+    }
+
     public SwipeBackView(Activity activity, int resId) {
         super(activity);
         this.activity = activity;
         this.contentView = LayoutInflater.from(activity).inflate(resId, null);
-
         this.init();
     }
 
@@ -52,7 +67,6 @@ public class SwipeBackView extends FrameLayout {
         super(activity);
         this.activity = activity;
         this.contentView = contentView;
-
         this.init();
     }
 
@@ -82,21 +96,27 @@ public class SwipeBackView extends FrameLayout {
         if (actionBar != null) actionBar.hide();
         SwipeBackView.this.setPadding(0, 0, 0, 0);
 
+        ILayout iLayout = new ILayout(activity);
+        iLayout.addView(contentView);
+        this.contentView = iLayout;
+
+        prevView = new ImageView(activity);
+        prevView.setScaleType(ImageView.ScaleType.FIT_XY);
         prevBitmap = getLastBitmap();
         if (prevBitmap == null) {
-            prevView = new View(activity);
-            prevView.setBackground(new ColorDrawable(DEF_BG_COLOR));
+            prevView.setImageDrawable(new ColorDrawable(DEF_BG_COLOR));
         } else {
-            prevView = new ImageView(activity);
-            ((ImageView) prevView).setScaleType(ImageView.ScaleType.FIT_XY);
-            ((ImageView) prevView).setImageBitmap(prevBitmap);
+            prevView.setImageBitmap(prevBitmap);
         }
         prevLayoutParams = getMatchLayoutParams();
         prevView.setLayoutParams(prevLayoutParams);
 
         contentLayoutParams = getMatchLayoutParams();
         contentView.setLayoutParams(contentLayoutParams);
-        contentView.setBackgroundColor(DEF_BG_COLOR);
+
+        if (contentView.getBackground() == null) {
+            contentView.setBackgroundColor(DEF_BG_COLOR);   // 设置默认背景
+        }
 
         contentView.setOnTouchListener(new OnTouchListener() {
             @Override
