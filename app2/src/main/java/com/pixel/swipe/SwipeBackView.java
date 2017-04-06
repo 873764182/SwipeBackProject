@@ -19,26 +19,15 @@ import java.util.Map;
 /**
  * Created by pixel on 2017/4/5.
  * <p>
- * 直接基于FrameLayout边距实现
+ * 直接基于FrameLayout边距/截图实现,不需要设置Activity透明主题,Activity不能有ActionBar.
  */
 
 public class SwipeBackView extends FrameLayout {
-    protected static final Map<String, Bitmap> BITMAP_ARRAY = new LinkedHashMap<String, Bitmap>();
+    protected static final Map<String, Bitmap> BITMAP_ARRAY = new LinkedHashMap<>();
 
-    protected static Bitmap getLastBitmap() {
-        if (BITMAP_ARRAY.size() > 0) {
-            int flag = 0;
-            for (Map.Entry<String, Bitmap> entry : BITMAP_ARRAY.entrySet()) {
-                if (flag++ == BITMAP_ARRAY.size() - 1) {
-                    return entry.getValue();
-                }
-            }
-        }
-        return null;
-    }
-
-    protected static final float PROPORTION = 2f;
-    protected int DEF_BG_COLOR = Color.argb(250, 255, 255, 255);
+    protected float PROPORTION = 2f;   // 两个界面的位置差值倍数
+    protected float TRIGGER = 50f;     // 边缘触发范围
+    protected int DEF_BG_COLOR = Color.argb(250, 255, 255, 255);    // 默认背景色
     protected Activity activity;
     protected View contentView;
     protected View prevView;
@@ -76,6 +65,18 @@ public class SwipeBackView extends FrameLayout {
         return layoutParams;
     }
 
+    protected Bitmap getLastBitmap() {
+        if (BITMAP_ARRAY.size() > 0) {
+            int flag = 0;
+            for (Map.Entry<String, Bitmap> entry : BITMAP_ARRAY.entrySet()) {
+                if (flag++ == BITMAP_ARRAY.size() - 1) {
+                    return entry.getValue();
+                }
+            }
+        }
+        return null;
+    }
+
     protected void init() {
         ActionBar actionBar = activity.getActionBar();
         if (actionBar != null) actionBar.hide();
@@ -109,7 +110,7 @@ public class SwipeBackView extends FrameLayout {
                         break;
                     case MotionEvent.ACTION_MOVE:
                         if (rawX <= 0) rawX = event.getRawX();
-                        if (rawX <= 50) {
+                        if (rawX <= TRIGGER) {
                             moveX = (int) (event.getRawX() - rawX);
 
                             contentLayoutParams.leftMargin = moveX;
@@ -126,14 +127,16 @@ public class SwipeBackView extends FrameLayout {
                         break;
                     case MotionEvent.ACTION_UP:
                         rawX = 0;
-                        contentLayoutParams.leftMargin = (int) rawX;
-                        contentView.setLayoutParams(contentLayoutParams);
-
-                        prevLayoutParams.leftMargin = (int) -(contentX / PROPORTION);
-                        prevView.setLayoutParams(prevLayoutParams);
 
                         if (moveX >= contentX / 2) {
                             activity.finish();
+                            activity.overridePendingTransition(0, 0);
+                        } else {
+                            contentLayoutParams.leftMargin = (int) rawX;
+                            contentView.setLayoutParams(contentLayoutParams);
+
+                            prevLayoutParams.leftMargin = (int) -(contentX / PROPORTION);
+                            prevView.setLayoutParams(prevLayoutParams);
                         }
                         break;
                 }
@@ -178,4 +181,11 @@ public class SwipeBackView extends FrameLayout {
         DEF_BG_COLOR = defBgColor;
     }
 
+    public void setProportion(float proportion) {
+        this.PROPORTION = proportion;
+    }
+
+    public void setTrigger(float trigger) {
+        this.TRIGGER = trigger;
+    }
 }
