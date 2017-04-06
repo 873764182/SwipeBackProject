@@ -2,7 +2,6 @@ package com.pixel.swipe;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -43,8 +42,8 @@ public class SwipeBackView extends FrameLayout {
 
     protected class ILayout extends FrameLayout {
 
-        public ILayout(Context context) {
-            super(context);
+        public ILayout(Activity activity) {
+            super(activity);
         }
 
         @Override
