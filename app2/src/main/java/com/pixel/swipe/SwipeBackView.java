@@ -2,9 +2,11 @@ package com.pixel.swipe;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.Application;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -94,6 +96,7 @@ public class SwipeBackView extends FrameLayout {
         ActionBar actionBar = activity.getActionBar();
         if (actionBar != null) actionBar.hide();
         SwipeBackView.this.setPadding(0, 0, 0, 0);
+//        activity.getApplication().registerActivityLifecycleCallbacks(new ActivityLifecycleCallback());
 
         ILayout iLayout = new ILayout(activity);
         iLayout.addView(contentView);
@@ -206,5 +209,42 @@ public class SwipeBackView extends FrameLayout {
 
     public void setTrigger(float trigger) {
         this.TRIGGER = trigger;
+    }
+
+    /**
+     * Activity 生命周期监听
+     */
+    private class ActivityLifecycleCallback implements Application.ActivityLifecycleCallbacks {
+
+        @Override
+        public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+        }
+
+        @Override
+        public void onActivityStarted(Activity activity) {
+        }
+
+        @Override
+        public void onActivityResumed(Activity activity) {
+        }
+
+        @Override
+        public void onActivityPaused(Activity activity) {
+        }
+
+        @Override
+        public void onActivityStopped(Activity activity) {
+            contentView.setDrawingCacheEnabled(true);
+            contentView.buildDrawingCache();
+            BITMAP_ARRAY.put(activity.getClass().getName(), contentView.getDrawingCache()); // 每次获取最新截图
+        }
+
+        @Override
+        public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+        }
+
+        @Override
+        public void onActivityDestroyed(Activity activity) {
+        }
     }
 }
